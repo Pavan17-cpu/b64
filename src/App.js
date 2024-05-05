@@ -1,25 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class Base64ImageOrVideo extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      inputUrl: '',
+      isSubmitted: false
+    };
+  }
+
+  handleChange = (event) => {
+    this.setState({ inputUrl: event.target.value });
+  };
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    this.setState({ isSubmitted: true });
+  };
+
+  render() {
+    const { inputUrl, isSubmitted } = this.state;
+
+    return (
+      <div>
+        <h1>Base64 Image or Video Example</h1>
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            Enter Base64 URL:
+            <input type="text" value={inputUrl} onChange={this.handleChange} />
+          </label>
+          <button type="submit">Submit</button>
+        </form>
+        {isSubmitted && (
+          <div>
+            <h2>Result:</h2>
+            {inputUrl.startsWith('data:image') ? (
+              <img src={inputUrl} alt="base64_image" />
+            ) : (
+              <video controls>
+                <source src={inputUrl} type="video/mp4" />
+                <source src={inputUrl} type="video/mkv" />
+                <source src={inputUrl} type="video/webm" codecs="vp9, opus" />
+                <source src={inputUrl} type="video/ogg" codecs="theora, vorbis" />
+                Your browser does not support the video tag.
+              </video>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  }
 }
 
-export default App;
+export default Base64ImageOrVideo;
